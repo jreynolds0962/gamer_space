@@ -10,7 +10,7 @@ database = os.environ['DATABASE_NAME']
 
 #Connect to Database
 engine = create_engine(
-    f"mariadb+mariadbconnector://{db_user}:{db_password}@127.0.0.1:3306/{database}"
+    f"mysql+pymysql://{db_user}:{db_password}@127.0.0.1:3306/{database}"
     )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

@@ -1,9 +1,5 @@
 *venv*
-*models/*
-*schemas/*
-*models/*
-*routes/*
 *__pycache__
-*.vscode/*
-*db_config/*
-*crud/*
+*.vscode/
+.env
+*.ini

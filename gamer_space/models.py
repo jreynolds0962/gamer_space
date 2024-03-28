@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, REAL, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship
 from .database import Base
 
@@ -10,7 +10,6 @@ class Developer(Base):
     hq_location = Column(String(255))
     website = Column(String(255))
     
-    games = relationship("Game", back_populates="developer")
 
     def __repr__(self):
         return f'Developer: {self.name}'
@@ -21,13 +20,9 @@ class Game(Base):
     name = Column(String(255), nullable=False)
     release_year = Column(Integer)
     genre = Column(String(255))
-    overall_rating = Column(REAL)
+    overall_rating = Column(Float)
+    developer = Column(String(255))
     
-    developer_id = Column(Integer, ForeignKey('developers.id'))
-    developer = relationship("Developer",
-                             foreign_keys=[developer_id],
-                             primaryjoin="Game.developer_id == Developer.id"
-                             )
 
     def __repr__(self):
         return f'Game: {self.name}'
@@ -36,5 +31,5 @@ class Game(Base):
         return {
             "id": self.id,
             "name": self.name,
-            "genre": self.genre,
+            "genre": self.genre
             }

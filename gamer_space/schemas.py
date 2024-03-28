@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 
 
@@ -8,12 +8,28 @@ class VideoGameBase(BaseModel):
     genre: Optional[str]
     overall_rating: Optional[float]
 
+class DeveloperBase(BaseModel):
+    name: str
+    founded_year: Optional[int]
+    hq_location: Optional[str]
+    website: Optional[str]
+
+
+
+
+
 class VideoGameCreate(VideoGameBase):
+    developer: str
+
+class DeveloperCreate(DeveloperBase):
     pass
+
+
+
 
 class VideoGame(VideoGameBase):
     id: int
-    developer: str
+    developer_id: int
 
     class Config:
         orm_mode = True
@@ -24,21 +40,13 @@ class VideoGame(VideoGameBase):
                 "release_date": 1985,
                 "genre": "Platformer",
                 "overall_rating": 4.5
+                # "developer_id": 1
             }
         }
 
-class DeveloperBase(BaseModel):
-    name: str
-    founded_year: Optional[int]
-    hq_location: Optional[str]
-    website: Optional[str]
-
-class DeveloperCreate(DeveloperBase):
-    pass
-
 class Developer(DeveloperBase):
     id: int
-    games: list[VideoGame] = []
+    # games: list[VideoGame] = Field(include={"name"})
 
     class Config:
         orm_mode = True
@@ -49,5 +57,6 @@ class Developer(DeveloperBase):
                 "founded_year": 1889,
                 "headquarters": "Kyoto, Japan",
                 "website": "https://www.nintendo.com/"
+                # "games": []
             }
         }
