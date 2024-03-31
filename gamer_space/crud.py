@@ -21,6 +21,12 @@ def create_game(db: Session, game: schemas.VideoGameCreate):
     db.refresh(db_game)
     return db_game
 
+def delete_game(db: Session, game_id: int):
+    name = db.query(models.Game).filter(models.Game.id == game_id).first().name
+    db.query(models.Game).filter(models.Game.id == game_id).delete()
+    db.commit()
+    return {"message": f"{name} deleted successfully from games list"}
+
 # Developer CRUD
 def get_developer_by_id(db: Session, developer_id: int):
     return db.query(models.Developer).filter(models.Developer.id == developer_id).first()
@@ -34,3 +40,9 @@ def create_developer(db: Session, developer: schemas.DeveloperCreate):
     db.commit()
     db.refresh(db_developer)
     return db_developer
+
+def delete_developer(db: Session, developer_id: int):
+    name = db.query(models.Developer).filter(models.Developer.id == developer_id).first().name
+    db.query(models.Developer).filter(models.Developer.id == developer_id).delete()
+    db.commit()
+    return {"message": f"{name} deleted successfully from developers list"}

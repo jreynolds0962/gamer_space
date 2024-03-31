@@ -21,8 +21,8 @@ class Game(Base):
     release_year = Column(Integer)
     genre = Column(String(255))
     overall_rating = Column(Float)
-    developer = Column(String(255))
-    
+    developer = Column(Integer, ForeignKey('developers.id'))
+      
 
     def __repr__(self):
         return f'Game: {self.name}'

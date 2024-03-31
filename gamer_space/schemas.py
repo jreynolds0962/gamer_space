@@ -7,29 +7,13 @@ class VideoGameBase(BaseModel):
     release_year: int
     genre: Optional[str]
     overall_rating: Optional[float]
-
-class DeveloperBase(BaseModel):
-    name: str
-    founded_year: Optional[int]
-    hq_location: Optional[str]
-    website: Optional[str]
-
-
-
-
+    developer: int
 
 class VideoGameCreate(VideoGameBase):
-    developer: str
-
-class DeveloperCreate(DeveloperBase):
     pass
-
-
-
 
 class VideoGame(VideoGameBase):
     id: int
-    developer_id: int
 
     class Config:
         orm_mode = True
@@ -43,6 +27,16 @@ class VideoGame(VideoGameBase):
                 # "developer_id": 1
             }
         }
+
+
+class DeveloperBase(BaseModel):
+    name: str
+    founded_year: Optional[int]
+    hq_location: Optional[str]
+    website: Optional[str]
+
+class DeveloperCreate(DeveloperBase):
+    pass
 
 class Developer(DeveloperBase):
     id: int

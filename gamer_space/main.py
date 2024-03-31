@@ -1,7 +1,8 @@
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
-from . import crud, models, schemas
+from . import crud, schemas
 from .database import SessionLocal, engine
 
 
@@ -25,7 +26,7 @@ def create_developer(developer: schemas.DeveloperCreate, db: Session = Depends(g
     return crud.create_developer(db=db, developer=developer)
 
 @app.get("/developers/", response_model=list[schemas.Developer], tags=["developers"])
-def read_developers(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def get_developers(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     developers = crud.get_developers(db, skip=skip, limit=limit)
     if developers is None:
         raise HTTPException(status_code=404, detail="No developers found")
@@ -37,6 +38,14 @@ def read_developer(developer_id: int, db: Session = Depends(get_db)):
     if db_developer is None:
         raise HTTPException(status_code=404, detail="Developer not found by given ID")
     return db_developer
+
+@app.delete("/developers/{developer_id}", tags=["developers"])
+def delete_developer(developer_id: int, db: Session = Depends(get_db)):
+    db_developer = crud.get_developer_by_id(db, developer_id=developer_id)
+    if db_developer is None:
+        raise HTTPException(status_code=404, detail="Developer not found by given ID")
+    deleted = crud.delete_developer(db, developer_id=developer_id)
+    return deleted
 
 @app.post("/games/", response_model=schemas.VideoGame, tags=["games"])
 def create_game(game: schemas.VideoGameCreate, db: Session = Depends(get_db)):
@@ -53,3 +62,11 @@ def read_game(game_id: int, db: Session = Depends(get_db)):
     if db_game is None:
         raise HTTPException(status_code=404, detail="Game not found by given ID")
     return db_game
+
+@app.delete("/games/{game_id}", tags=["games"])
+def delete_game(game_id: int, db: Session = Depends(get_db)):
+    db_game = crud.get_game_by_id(db, game_id=game_id)
+    if db_game is None:
+        raise HTTPException(status_code=404, detail="Game not found by given ID")
+    deleted = crud.delete_game(db, game_id=game_id)
+    return deleted
